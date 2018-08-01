@@ -1,4 +1,3 @@
-/target/
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
@@ -15,6 +14,10 @@
 *.iws
 *.iml
 *.ipr
+/target/
+*/target/
+mvnw
+mvnw.cmd
 
 ### jar ###
 *.jar
