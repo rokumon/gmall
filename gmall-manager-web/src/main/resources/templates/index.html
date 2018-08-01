@@ -55,13 +55,13 @@
         </div>
     </div>
 
-    <script language="JavaScript">
+    <script type="application/javascript">
         function addAttrTabs() {
             var b = $("#tt").tabs("exists", "属性信息管理");
             if (!b) {
                 $("#tt").tabs("add", {
                     title: "属性信息管理",
-                    href: "attributePage",
+                    href: "attrListPage",
                     closable: true
                 });
             } else {
