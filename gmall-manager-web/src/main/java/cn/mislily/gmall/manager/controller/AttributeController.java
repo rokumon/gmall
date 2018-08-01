@@ -16,6 +16,11 @@ public class AttributeController {
     @Reference
     private AttributeService attributeService;
 
+
+    //Page
+
+
+    //Info
     @RequestMapping("attrInfoList/{catalog3Id}")
     @ResponseBody
     public List<BaseAttrInfo> attrInfoList(@PathVariable("catalog3Id")String catalog3Id){
@@ -24,4 +29,24 @@ public class AttributeController {
 
         return attrInfoList;
     }
+
+
+    @RequestMapping("deleteAttrInfo/{attrInfoId}")
+    @ResponseBody
+    public Boolean deleteAttrInfo(@PathVariable("attrInfoId")String attrInfoId){
+
+        attributeService.deleteAttributeInfo(attrInfoId);
+
+        return true;
+    }
+
+
+    //Value
+    @RequestMapping("saveAttrInfo")
+    @ResponseBody
+    public Boolean saveAttrInfo(BaseAttrInfo baseAttrInfo){
+        attributeService.saveAttribute(baseAttrInfo);
+        return true;
+    }
+
 }

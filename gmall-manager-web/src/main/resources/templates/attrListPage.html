@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -15,9 +15,9 @@
 </table>
 
 <div id="tb">
-    <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
-    <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">编辑</a>
-    <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">删除</a>
+    <a id="addAttr" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addAttr()">添加</a>
+    <a id="editAttr" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="editAttr()">编辑</a>
+    <a id="deleteAttr"  class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="deleteAttr()">删除</a>
 
     <div>
         一级分类：<input id="ctg1ForAttrList"/>
@@ -26,22 +26,68 @@
         <a id="reloadAttrList">刷新属性列表</a>
     </div>
 
+    <div th:include="attrInfoPage"></div>
 
 </div>
 
     <script type="application/javascript">
 
         function reloadAttrList(catalog3Id) {
-
             if (catalog3Id == null || catalog3Id == "") {
                 catalog3Id = $("#ctg3ForAttrList").combobox("getValue");
             }
-
             //判断
             $("#dg").datagrid({
                 url:"attrInfoList/"+catalog3Id
             });
         }
+
+        function addAttr() {
+            var catalog3Id = $("#ctg3ForAttrList").combobox("getValue");
+            // 打开属性添加的对话框
+            if(catalog3Id){
+                $("#dlg").dialog("open");
+                // 初始化
+                initAttrValueDatagrid();
+            }else{
+                alert("请选择三级分类的id");
+            }
+        }
+
+        function editAttr() {
+            var catalog3Id = $("#ctg3ForAttrList").combobox("getValue");
+            // 打开属性添加的对话框
+            if(catalog3Id){
+                $("#dlg").dialog("open");
+                // 初始化
+                var attrInfo = $("#dg").datagrid("getSelected");
+                initAttrValueDatagrid(attrInfo);
+            }else{
+                alert("请选择三级分类的id");
+            }
+        }
+
+        function deleteAttr() {
+            var attrInfo = $("#dg").datagrid("getSelected");
+            // 打开属性添加的对话框
+            if(attrInfo){
+
+                $.get("deleteAttrInfo/"+attrInfo.id, null,function (result) {
+                        if(result){
+                            reloadAttrList();
+                        }
+                    }
+                );
+
+                //alert(url);
+
+            }else{
+                alert("请选择要删除的属性!");
+            }
+        }
+
+
+
 
         $(function () {
             $('#ctg1ForAttrList').combobox({
