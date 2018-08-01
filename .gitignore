@@ -18,6 +18,7 @@
 */target/
 mvnw
 mvnw.cmd
+.mvn
 
 ### jar ###
 *.jar
