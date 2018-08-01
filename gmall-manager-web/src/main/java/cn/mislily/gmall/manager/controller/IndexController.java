@@ -11,8 +11,8 @@ public class IndexController {
         return "index";
     }
 
-    @RequestMapping("attributePage")
+    @RequestMapping("attrListPage")
     public String attributePage(){
-        return "attributePage";
+        return "attrListPage";
     }
 }
