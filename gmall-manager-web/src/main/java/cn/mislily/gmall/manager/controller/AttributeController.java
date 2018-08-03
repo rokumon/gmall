@@ -30,7 +30,6 @@ public class AttributeController {
         return attrInfoList;
     }
 
-
     @RequestMapping("deleteAttrInfo/{attrInfoId}")
     @ResponseBody
     public Boolean deleteAttrInfo(@PathVariable("attrInfoId")String attrInfoId){
@@ -40,12 +39,19 @@ public class AttributeController {
         return true;
     }
 
-
     //Value
     @RequestMapping("saveAttrInfo")
     @ResponseBody
     public Boolean saveAttrInfo(BaseAttrInfo baseAttrInfo){
-        attributeService.saveAttribute(baseAttrInfo);
+        attributeService.saveAttributeInfo(baseAttrInfo);
+        return true;
+    }
+
+    @RequestMapping("updateAttrInfo")
+    @ResponseBody
+    public Boolean updateAttrInfo(BaseAttrInfo baseAttrInfo){
+        System.out.println(baseAttrInfo);
+        attributeService.updateAttributeInfo(baseAttrInfo);
         return true;
     }
 

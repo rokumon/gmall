@@ -1,16 +1,19 @@
 package cn.mislily.gmall.bean;
 
+import cn.mislily.gmall.bean.interfaces.DataBaseUpdateEntity;
+
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @param
  * @return
  */
-public class BaseCatalog1 implements Serializable {
+public class BaseCatalog1 implements Serializable, DataBaseUpdateEntity {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +35,20 @@ public class BaseCatalog1 implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BaseCatalog1 that = (BaseCatalog1) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }
 
