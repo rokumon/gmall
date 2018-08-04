@@ -1,7 +1,11 @@
 package cn.mislily.gmall.bean;
 
 
+import cn.mislily.gmall.bean.interfaces.DataBaseUpdateEntity;
+
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -11,10 +15,11 @@ import java.util.Date;
  * @param
  * @return
  */
-public class PaymentInfo implements Serializable {
+public class PaymentInfo implements Serializable, DataBaseUpdateEntity {
 
-    @Column
     @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column
@@ -30,7 +35,7 @@ public class PaymentInfo implements Serializable {
     private BigDecimal totalAmount;
 
     @Column
-    private String Subject;
+    private String subject;
 
     @Column
     private String paymentStatus;
@@ -49,7 +54,7 @@ public class PaymentInfo implements Serializable {
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.id = (id == "" ? null : id);
     }
 
     public String getOutTradeNo() {
@@ -57,7 +62,7 @@ public class PaymentInfo implements Serializable {
     }
 
     public void setOutTradeNo(String outTradeNo) {
-        this.outTradeNo = outTradeNo;
+        this.outTradeNo = (outTradeNo == "" ? null : outTradeNo);
     }
 
     public String getOrderId() {
@@ -65,7 +70,7 @@ public class PaymentInfo implements Serializable {
     }
 
     public void setOrderId(String orderId) {
-        this.orderId = orderId;
+        this.orderId = (orderId == "" ? null : orderId);
     }
 
     public String getAlipayTradeNo() {
@@ -73,7 +78,7 @@ public class PaymentInfo implements Serializable {
     }
 
     public void setAlipayTradeNo(String alipayTradeNo) {
-        this.alipayTradeNo = alipayTradeNo;
+        this.alipayTradeNo = (alipayTradeNo == "" ? null : alipayTradeNo);
     }
 
     public BigDecimal getTotalAmount() {
@@ -85,11 +90,11 @@ public class PaymentInfo implements Serializable {
     }
 
     public String getSubject() {
-        return Subject;
+        return subject;
     }
 
     public void setSubject(String subject) {
-        Subject = subject;
+        this.subject = (subject == "" ? null : subject);
     }
 
     public String getPaymentStatus() {
@@ -97,7 +102,7 @@ public class PaymentInfo implements Serializable {
     }
 
     public void setPaymentStatus(String paymentStatus) {
-        this.paymentStatus = paymentStatus;
+        this.paymentStatus = (paymentStatus == "" ? null : paymentStatus);
     }
 
     public Date getCreateTime() {
@@ -121,6 +126,42 @@ public class PaymentInfo implements Serializable {
     }
 
     public void setCallbackContent(String callbackContent) {
-        this.callbackContent = callbackContent;
+        this.callbackContent = (callbackContent == "" ? null : callbackContent);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PaymentInfo that = (PaymentInfo) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (outTradeNo != null ? !outTradeNo.equals(that.outTradeNo) : that.outTradeNo != null) return false;
+        if (orderId != null ? !orderId.equals(that.orderId) : that.orderId != null) return false;
+        if (alipayTradeNo != null ? !alipayTradeNo.equals(that.alipayTradeNo) : that.alipayTradeNo != null)
+            return false;
+        if (totalAmount != null ? !totalAmount.equals(that.totalAmount) : that.totalAmount != null) return false;
+        if (subject != null ? !subject.equals(that.subject) : that.subject != null) return false;
+        if (paymentStatus != null ? !paymentStatus.equals(that.paymentStatus) : that.paymentStatus != null)
+            return false;
+        if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) return false;
+        if (callbackTime != null ? !callbackTime.equals(that.callbackTime) : that.callbackTime != null) return false;
+        return callbackContent != null ? callbackContent.equals(that.callbackContent) : that.callbackContent == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (outTradeNo != null ? outTradeNo.hashCode() : 0);
+        result = 31 * result + (orderId != null ? orderId.hashCode() : 0);
+        result = 31 * result + (alipayTradeNo != null ? alipayTradeNo.hashCode() : 0);
+        result = 31 * result + (totalAmount != null ? totalAmount.hashCode() : 0);
+        result = 31 * result + (subject != null ? subject.hashCode() : 0);
+        result = 31 * result + (paymentStatus != null ? paymentStatus.hashCode() : 0);
+        result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
+        result = 31 * result + (callbackTime != null ? callbackTime.hashCode() : 0);
+        result = 31 * result + (callbackContent != null ? callbackContent.hashCode() : 0);
+        return result;
     }
 }

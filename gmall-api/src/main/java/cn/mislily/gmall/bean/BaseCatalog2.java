@@ -28,7 +28,7 @@ public class BaseCatalog2 implements Serializable, DataBaseUpdateEntity {
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.id = (id == "" ? null : id);
     }
 
     public String getName() {
@@ -36,7 +36,7 @@ public class BaseCatalog2 implements Serializable, DataBaseUpdateEntity {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = (name == "" ? null : name);
     }
 
     public String getCatalog1Id() {
@@ -44,21 +44,26 @@ public class BaseCatalog2 implements Serializable, DataBaseUpdateEntity {
     }
 
     public void setCatalog1Id(String catalog1Id) {
-        this.catalog1Id = catalog1Id;
+        this.catalog1Id = (catalog1Id == "" ? null : catalog1Id);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         BaseCatalog2 that = (BaseCatalog2) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(catalog1Id, that.catalog1Id);
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        return catalog1Id != null ? catalog1Id.equals(that.catalog1Id) : that.catalog1Id == null;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, catalog1Id);
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (catalog1Id != null ? catalog1Id.hashCode() : 0);
+        return result;
     }
 }
