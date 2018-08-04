@@ -2,9 +2,7 @@ package cn.mislily.gmall.bean;
 
 import cn.mislily.gmall.bean.interfaces.DataBaseUpdateEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -15,6 +13,7 @@ import java.util.Objects;
 public class BaseAttrValue implements Serializable, DataBaseUpdateEntity {
     @Id
     @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     @Column
     private String valueName;

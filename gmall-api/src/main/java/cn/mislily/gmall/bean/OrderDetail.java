@@ -1,8 +1,8 @@
 package cn.mislily.gmall.bean;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Transient;
+import cn.mislily.gmall.bean.interfaces.DataBaseUpdateEntity;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -10,9 +10,10 @@ import java.math.BigDecimal;
  * @param
  * @return
  */
-public class OrderDetail implements Serializable {
+public class OrderDetail implements Serializable, DataBaseUpdateEntity {
     @Id
     @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     @Column
     private String orderId;
@@ -35,7 +36,7 @@ public class OrderDetail implements Serializable {
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.id = (id == "" ? null : id);
     }
 
     public String getOrderId() {
@@ -43,7 +44,7 @@ public class OrderDetail implements Serializable {
     }
 
     public void setOrderId(String orderId) {
-        this.orderId = orderId;
+        this.orderId = (orderId == "" ? null : orderId);
     }
 
     public String getSkuId() {
@@ -51,7 +52,7 @@ public class OrderDetail implements Serializable {
     }
 
     public void setSkuId(String skuId) {
-        this.skuId = skuId;
+        this.skuId = (skuId == "" ? null : skuId);
     }
 
     public String getSkuName() {
@@ -59,7 +60,7 @@ public class OrderDetail implements Serializable {
     }
 
     public void setSkuName(String skuName) {
-        this.skuName = skuName;
+        this.skuName = (skuName == "" ? null : skuName);
     }
 
     public String getImgUrl() {
@@ -67,7 +68,7 @@ public class OrderDetail implements Serializable {
     }
 
     public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
+        this.imgUrl = (imgUrl == "" ? null : imgUrl);
     }
 
     public BigDecimal getOrderPrice() {
@@ -91,7 +92,37 @@ public class OrderDetail implements Serializable {
     }
 
     public void setHasStock(String hasStock) {
-        this.hasStock = hasStock;
+        this.hasStock = (hasStock == "" ? null : hasStock);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrderDetail that = (OrderDetail) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (orderId != null ? !orderId.equals(that.orderId) : that.orderId != null) return false;
+        if (skuId != null ? !skuId.equals(that.skuId) : that.skuId != null) return false;
+        if (skuName != null ? !skuName.equals(that.skuName) : that.skuName != null) return false;
+        if (imgUrl != null ? !imgUrl.equals(that.imgUrl) : that.imgUrl != null) return false;
+        if (orderPrice != null ? !orderPrice.equals(that.orderPrice) : that.orderPrice != null) return false;
+        if (skuNum != null ? !skuNum.equals(that.skuNum) : that.skuNum != null) return false;
+        return hasStock != null ? hasStock.equals(that.hasStock) : that.hasStock == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (orderId != null ? orderId.hashCode() : 0);
+        result = 31 * result + (skuId != null ? skuId.hashCode() : 0);
+        result = 31 * result + (skuName != null ? skuName.hashCode() : 0);
+        result = 31 * result + (imgUrl != null ? imgUrl.hashCode() : 0);
+        result = 31 * result + (orderPrice != null ? orderPrice.hashCode() : 0);
+        result = 31 * result + (skuNum != null ? skuNum.hashCode() : 0);
+        result = 31 * result + (hasStock != null ? hasStock.hashCode() : 0);
+        return result;
     }
 }
 
