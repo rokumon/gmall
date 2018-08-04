@@ -26,7 +26,7 @@ public class BaseCatalog1 implements Serializable, DataBaseUpdateEntity {
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.id = (id == "" ? null : id);
     }
 
     public String getName() {
@@ -34,21 +34,25 @@ public class BaseCatalog1 implements Serializable, DataBaseUpdateEntity {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = (name == "" ? null : name);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         BaseCatalog1 that = (BaseCatalog1) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name);
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        return name != null ? name.equals(that.name) : that.name == null;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
     }
 }
 

@@ -39,7 +39,7 @@ public class BaseAttrInfo implements Serializable, DataBaseUpdateEntity {
     }
 
     public void setAttrName(String attrName) {
-        this.attrName = attrName;
+        this.attrName = (attrName == "" ? null : attrName);
     }
 
     public String getCatalog3Id() {
@@ -47,7 +47,7 @@ public class BaseAttrInfo implements Serializable, DataBaseUpdateEntity {
     }
 
     public void setCatalog3Id(String catalog3Id) {
-        this.catalog3Id = catalog3Id;
+        this.catalog3Id = (catalog3Id == "" ? null : catalog3Id);
     }
 
     public String getIsEnabled() {
@@ -55,7 +55,7 @@ public class BaseAttrInfo implements Serializable, DataBaseUpdateEntity {
     }
 
     public void setIsEnabled(String isEnabled) {
-        this.isEnabled = isEnabled;
+        this.isEnabled = (isEnabled == "" ? null : isEnabled);
     }
 
     public List<BaseAttrValue> getAttrValueList() {
