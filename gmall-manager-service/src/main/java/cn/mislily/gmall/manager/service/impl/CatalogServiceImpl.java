@@ -24,12 +24,21 @@ public class CatalogServiceImpl implements CatalogService {
     @Autowired
     private BaseCatalog3Mapper baseCatalog3Mapper;
 
+    /**
+     * 一级 分类信息
+     * @return
+     */
     @Override
     public List<BaseCatalog1> baseCatalog1List() {
         List<BaseCatalog1> baseCatalog1List = baseCatalog1Mapper.selectAll();
         return baseCatalog1List;
     }
 
+    /**
+     * 二级 分类信息
+     * @param catalog1Id
+     * @return
+     */
     @Override
     public List<BaseCatalog2> baseCatalog2List(String catalog1Id) {
         BaseCatalog2 baseCatalog2 = new BaseCatalog2();
@@ -39,6 +48,11 @@ public class CatalogServiceImpl implements CatalogService {
         return baseCatalog2List;
     }
 
+    /**
+     * 三级 分类信息
+     * @param catalog2Id
+     * @return
+     */
     @Override
     public List<BaseCatalog3> baseCatalog3List(String catalog2Id) {
         BaseCatalog3 baseCatalog3 = new BaseCatalog3();

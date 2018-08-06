@@ -65,6 +65,10 @@ public class AttributeServiceImpl implements AttributeService {
         return changedRow;
     }
 
+    /**
+     * 保存 属性名 的所有信息
+     * @param attributeInfo
+     */
     @Override
     public void saveAttributeInfo(BaseAttrInfo attributeInfo) {
 
@@ -115,39 +119,9 @@ public class AttributeServiceImpl implements AttributeService {
         Integer changedRow = attributeValueMapper.delete(attributeValue);
     }
 
-    @Override
-    public void saveAttributeValuesByList(List<BaseAttrValue> attributeValueList, String attrId, Boolean isEnabled) {
-        if (attributeValueList != null) {
-            //遍历插入值
-            for (BaseAttrValue attrValue : attributeValueList) {
-                attrValue.setAttrId(attrId);
-                attrValue.setIsEnabled(isEnabled ? "1" : "0");
-                attributeValueMapper.insert(attrValue);
-            }
-        }
-    }
-
-    @Override
-    public void updateAttributeValuesByList(List<BaseAttrValue> attributeValueList) {
-        if (attributeValueList != null) {
-            //遍历更新值
-            for (BaseAttrValue attrValue : attributeValueList) {
-                attributeValueMapper.updateByPrimaryKey(attrValue);
-            }
-        }
-    }
-
-    @Override
-    public void deleteAttributeValuesByList(List<BaseAttrValue> attributeValueList) {
-        if (attributeValueList != null) {
-            //遍历删除值
-            for (BaseAttrValue attrValue : attributeValueList) {
-                attributeValueMapper.deleteByPrimaryKey(attrValue);
-            }
-        }
-    }
-
     /**
+     * 根据 属性信息 更新属性列表
+     * 包括 增 删 改 操作
      * @param attributeInfo
      */
     @Override
@@ -179,6 +153,58 @@ public class AttributeServiceImpl implements AttributeService {
 
         updadeEntityOperator.status();
     }
+
+
+
+    // Tools
+
+    /**
+     * 根据 列表 保存 属性值
+     * @param attributeValueList
+     * @param attrId
+     * @param isEnabled
+     */
+    @Override
+    public void saveAttributeValuesByList(List<BaseAttrValue> attributeValueList, String attrId, Boolean isEnabled) {
+        if (attributeValueList != null) {
+            //遍历插入值
+            for (BaseAttrValue attrValue : attributeValueList) {
+                attrValue.setAttrId(attrId);
+                attrValue.setIsEnabled(isEnabled ? "1" : "0");
+                attributeValueMapper.insert(attrValue);
+            }
+        }
+    }
+
+    /**
+     * 根据 列表 更新 属性值
+     * @param attributeValueList
+     */
+    @Override
+    public void updateAttributeValuesByList(List<BaseAttrValue> attributeValueList) {
+        if (attributeValueList != null) {
+            //遍历更新值
+            for (BaseAttrValue attrValue : attributeValueList) {
+                attributeValueMapper.updateByPrimaryKey(attrValue);
+            }
+        }
+    }
+
+    /**
+     * 根据 列表 删除 属性值
+     * @param attributeValueList
+     */
+    @Override
+    public void deleteAttributeValuesByList(List<BaseAttrValue> attributeValueList) {
+        if (attributeValueList != null) {
+            //遍历删除值
+            for (BaseAttrValue attrValue : attributeValueList) {
+                attributeValueMapper.deleteByPrimaryKey(attrValue);
+            }
+        }
+    }
+
+
 
 
 
