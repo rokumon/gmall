@@ -6,7 +6,8 @@
 </head>
 <body>
 <!-----------------弹出框----------------------------->
-<div id="spu_dlg" class="easyui-dialog" title="编辑spu" style="width:700px;height:520px;" closed="true" data-options="iconCls:'icon-save',resizable:true,modal:false" buttons="#spuBtns">
+<div id="spu_dlg" class="easyui-dialog" title="编辑spu" style="width:700px;height:520px;" closed="true"
+     data-options="iconCls:'icon-save',resizable:true,modal:false" buttons="#spuBtns">
     <form id="spuForm">
         <br/>
         <label>spu名称:</label>
@@ -25,7 +26,7 @@
             <div style="margin-bottom:5px">
                 <a href="#" id="spuImgAdd" class="easyui-linkbutton" iconCls="icon-remove" plain="true">添加图片</a>
                 <a href="#" id="spuImgUploadBtn" class="easyui-linkbutton" iconCls="icon-save" plain="true">图片上传</a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
+                <a href="#" id="spuImgDeleteBtn" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
             </div>
         </div>
 
@@ -38,7 +39,7 @@
             <div style="margin-bottom:5px">
                 <a href="#" id="spuSaleAttrAddBtn" class="easyui-linkbutton" iconCls="icon-add" onclick="addSpuSaleAttr()" plain="true">添加销售属性</a>
                 <a href="#" id="spuSaleAttrEditBtn" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editSpuSaleAttr()">编辑销售属性</a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="deleteSpuSaleAttr()">删除</a>
             </div>
         </div>
 
@@ -54,31 +55,74 @@
 
 <script language="application/javascript">
 
+    // 编辑
+    function editSpuSaleAttr() {
+        var selectedRow = $("#spuSaleAttrDg").datagrid("getSelected");
+        if (selectedRow) {
+
+        } else {
+            alert("请选择要编辑的行");
+        }
+    }
+
+    // 删除
+    function deleteSpuSaleAttr() {
+        var selectedRow = $("#spuSaleAttrDg").datagrid("getSelected");
+        if (selectedRow) {
+            var rowNum = $("#spuSaleAttrDg").datagrid("getRowIndex", selectedRow);
+            // 根据行号删除
+            $("#spuSaleAttrDg").datagrid("deleteRow", rowNum);
+        } else {
+            alert("请选择要删除的行");
+        }
+    }
+
+    // 保存
     function saveSpu() {
 
-        // 获取spu的json格式的js数据对象
+        // 创建空的 spuInfo 的 Json 对象
         var spuInfo = {};
+
+        // 获取 spuInfo 的 名称 和 描述信息
         spuInfo["spuName"] = $("#spuName").textbox("getValue");
         spuInfo["description"] = $("#description").textbox("getValue");
+
+        // 获取 spuInfo 的 三级分类id
         var catalog3Id = $("#ctg3ForSpuList").combobox("getValue");
+        console.log("catalog3Id = " + catalog3Id);
         if (!catalog3Id) {
             catalog3Id = "61";
         }
         spuInfo["catalog3Id"] = catalog3Id;
+
+        var spuImgRows = $("#spuImgDg").datagrid("getRows");
+
+        $(spuImgRows).each(function (i, spuImg) {
+            spuInfo["spuImageList[" + i + "].imgName"] = spuImg.imgName;
+            spuInfo["spuImageList[" + i + "].imgUrl"] = spuImg.imgUrl;
+        });
+
+        // 获取 销售属性 的 对象
         var attrRows = $("#spuSaleAttrDg").datagrid("getRows");
+
+        // 准备 销售属性信息
         $(attrRows).each(function (i, attr) {
-            // 封装销售属性
+
+            // 封装 销售属性信息
             spuInfo["spuSaleAttrList[" + i + "].saleAttrId"] = attr.saleAttrId;
             spuInfo["spuSaleAttrList[" + i + "].saleAttrName"] = attr.saleAttrName;
 
-            // 封装销售属性值
+            console.log(attr.spuSaleAttrValueJson);
+
+            // 获取 销售属性值列表
             var attrValueRows = attr.spuSaleAttrValueJson.rows;
+
+            // 封装 销售属性值列表
             $(attrValueRows).each(function (j, attrValue) {
                 spuInfo["spuSaleAttrList[" + i + "].spuSaleAttrValueList[" + j + "].saleAttrId"] = attr.saleAttrId;
                 spuInfo["spuSaleAttrList[" + i + "].spuSaleAttrValueList[" + j + "].saleAttrValueName"] = attrValue.saleAttrValueName;
             })
         });
-
 
         // 异步保存
         $.post("saveSpu", spuInfo, function (data) {
@@ -86,30 +130,76 @@
             // 关闭对话框
             $("#spu_dlg").dialog("close")
             // 刷新spu列表
+            reloadSpuList();
         });
     }
 
-    function initSpuInfoDlg() {
+    function addSpuSaleAttr() {
+        // 打开spu的销售属性对话框
+        $("#spuSaleAttr_dlg").dialog("open");
+
+        // 数据初始化
+        $("#spuSaleAttrValueDg").datagrid('loadData', {total: 0, rows: []});
+
+        // 初始化spu销售属性对话框
+        initSpuSaleAttrDlg();
+    }
+
+</script>
+
+
+
+<script type="application/javascript">
+
+    // 页面初始化
+    function initSpuInfoDlg(url,spuInfo,catalog3Id) {
         // 初始化上传控件插件(webuploader)
         initUploader();
-        // 初始化图片列表
-        initSpuImgListDatagrid();
-        // 初始化销售属性
-        initSpuSaleAttrListDatagrid();
+
+        $('#spuForm').form('clear');
+
+        if(url == "updateSpuInfo"){
+
+            $.get("spuInfo/"+spuInfo.id,null,function (result) {
+
+                console.log(result);
+
+                $('#spuForm').form('load',{
+                    spuName:result.spuName,
+                    description:result.description,
+                    spuId:result.spuId
+                });
+
+                // 初始化图片列表
+                initSpuImgListDatagrid(url,result,catalog3Id);
+                // 初始化销售属性
+                initSpuSaleAttrListDatagrid(url,result,catalog3Id);
+            });
+        } else {
+            // 初始化图片列表
+            initSpuImgListDatagrid(url,spuInfo,catalog3Id);
+            // 初始化销售属性
+            initSpuSaleAttrListDatagrid(url,spuInfo,catalog3Id);
+        }
     }
 
     // 初始化上传控件插件
     function initUploader() {
+
         var spuImgDg = $("#spuImgDg");//图片列表
         //初始化上传控件
         var spuImgUploader = WebUploader.create({
+            // 不进行自动上传
             auto: false,
             // swf文件路径
             swf: '/webuploader/Uploader.swf',
             // 文件接收路径
             server: '/fileUpload',
             // 选择文件的按钮。
-            pick: '#spuImgAdd',
+            pick: {
+                multiple: true,
+                id: '#spuImgAdd'
+            },
             // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
             resize: false,
             //设定文件大小上限 2M
@@ -121,6 +211,7 @@
                 mimeTypes: 'image/*'
             }
         });
+
         console.log("初始化文件上传控件的响应--fileQueued");
 
         //当用户选择了文件以后，表格要进行增行
@@ -134,11 +225,13 @@
         });
 
         //上传过程中，该进度会反复触发
+        /*
         spuImgUploader.on('uploadProgress', function (file, percentage) {
             var rowIndex = spuImgDg.datagrid('getRowIndex', file.id);
             var progessRow = {progress: (percentage * 100).toFixed(2)};
             spuImgDg.datagrid('updateRow', {index: rowIndex, row: progessRow});
         });
+        */
 
         // 上传成功时，要把生成的图片路径返回给表格的行中的url
         console.log("初始化文件上传控件的响应--uploadSuccess");
@@ -156,25 +249,53 @@
         $('#spuImgUploadBtn').click(function () {
             console.log("开始上传");
             if (spuImgUploader.getFiles().length <= 0) {
-                $.messager().alert('警告', '没有需要上传的文件', 'warning');
+                $.messager.alert('警告', '没有需要上传的文件', 'warning');
                 return;
             }
             spuImgUploader.upload();
         });
+
+        $("#spuImgDeleteBtn").click(function () {
+
+            var spuImage = $("#spuImgDg").datagrid("getSelected");
+            var imageUrl = spuImage.imgUrl;
+
+            // 打开属性添加的对话框
+            if (imageUrl) {
+                $.get("fileRemove/", imageUrl, function (result) {
+                        if (result) {
+                            // 获得行号
+                            var rowNum = $("#spuImgDg").datagrid("getRowIndex", spuImage);
+                            // 根据行号删除
+                            $("#spuImgDg").datagrid("deleteRow", rowNum);
+                        }
+                    }
+                );
+            } else {
+                alert("请选择要删除的图片!");
+            }
+        });
     }
 
     // 初始化图片表格和datagrid整合
-    function initSpuImgListDatagrid(spuInfo) {
+    function initSpuImgListDatagrid(url,spuInfo,catalog3Id) {
+
+        // 初始化
         $('#spuImgDg').datagrid('loadData', {total: 0, rows: []});
 
         spuImgDg = $("#spuImgDg").datagrid({
             idField: 'fileId',    //标识行的主键  可以利用getRowIndex进行查询
             columns: [[
-                {field: 'fileId', title: '文件编号', width: '15%'},//隐藏文件页面内部编号
+                {
+                    field: 'fileId', title: '文件编号', width: '15%'
+                },//隐藏文件页面内部编号
                 {
                     field: 'imgName', title: '图片简称', width: '20%'
                 },
-                {field: 'imgUrl', title: '图片路径', hidden: true},  //隐藏真实路径
+                {
+                    field: 'imgUrl', title: '图片路径', hidden: true
+                },  //隐藏真实路径
+                /*
                 {
                     field: 'progress', title: '上传进度', width: '20%',
                     formatter: function (value, row, index) {
@@ -191,7 +312,7 @@
                             "</div>";
                         return htmlstr;
                     }
-                },
+                },*/
                 {
                     field: 'imgState', title: '上传状态', width: '20%',           //如果存在路径表示上传成功
                     formatter: function (value, row, index) {
@@ -209,9 +330,31 @@
                 return "<img src=" + rowData.imgUrl + " style='width:100px;height:100px;'>";
             }
         });
+
+        // 回显属性
+        if(url == "updateSpuInfo" & !!spuInfo){
+
+            //图片列表
+            var spuImageList = spuInfo.spuImageList;
+
+            console.log(spuImageList);
+
+            $(spuImageList).each(function (i, spuImage) {
+
+                var row = {
+                    fileId: spuImage.id,
+                    imgName: spuImage.imgName,
+                    imgUrl: spuImage.imgUrl
+                };
+
+                spuImgDg.datagrid('appendRow', row);
+            });
+        }
+
     }
 
-    function initSpuSaleAttrListDatagrid() {
+    function initSpuSaleAttrListDatagrid(url,spuInfo,catalog3Id) {
+
         $("#spuSaleAttrDg").datagrid({
             columns: [[
                 {field: 'id', title: 'id', width: 100, hidden: true},
@@ -220,15 +363,17 @@
                 {field: 'spuSaleAttrValueJson', title: '页面暂存', width: 200, align: 'right'}
             ]]
         });
+
+        // 回显属性
+        if(!!url & url == "updateSpuInfo" & !!spuInfo){
+            console.log(spuInfo);
+            var spuSaleAttrList = spuInfo.spuSaleAttrList;
+            $('#spuSaleAttrDg').datagrid({
+                data:spuSaleAttrList
+            });
+        }
     }
 
-    function addSpuSaleAttr() {
-        // 打开spu的销售属性对话框
-        $("#spuSaleAttr_dlg").dialog("open");
-        $("#spuSaleAttrValueDg").datagrid('loadData', {total: 0, rows: []});//行号初始化
-        // 初始化spu销售属性对话框
-        initSpuSaleAttrDlg();
-    }
 </script>
 </body>
 </html>

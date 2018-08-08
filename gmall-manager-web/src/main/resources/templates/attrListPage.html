@@ -48,6 +48,8 @@
         // 打开属性添加的对话框
         if (catalog3Id) {
             $("#dlg").dialog("open");
+            // 清空文本框
+            $("#attrName").textbox("setValue","");
             // 初始化
             var url = "saveAttrInfo";
             initAttrValueDatagrid(url);
@@ -57,16 +59,16 @@
     }
 
     function editAttr() {
-        var catalog3Id = $("#ctg3ForAttrList").combobox("getValue");
+        var attrInfo = $("#dg").datagrid("getSelected");
         // 打开属性添加的对话框
-        if (catalog3Id) {
+        if (attrInfo) {
             $("#dlg").dialog("open");
             // 初始化
             var attrInfo = $("#dg").datagrid("getSelected");
             var url = "updateAttrInfo";
             initAttrValueDatagrid(url, attrInfo);
         } else {
-            alert("请选择三级分类的id");
+            alert("请选择要编辑的属性!");
         }
     }
 
@@ -88,6 +90,7 @@
 
 
     $(function () {
+
         $('#ctg1ForAttrList').combobox({
             url: 'catalog1List',
             valueField: 'id',

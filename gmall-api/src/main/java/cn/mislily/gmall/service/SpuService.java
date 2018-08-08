@@ -11,15 +11,30 @@ public interface SpuService {
 
     public void saveSpuInfo(SpuInfo spuInfo) ;
 
+    public void deleteSpuInfo(String spuId);
+
+    public void updateSpuInfo(SpuInfo spuInfo);
+
+    public SpuInfo spuInfo(String spuId);
+
+
     // SpuSaleAttr
     public void saveSaleAttrsByList(List<SpuSaleAttr> spuSaleAttrList, String spuId);
+
 
     // SpuSaleAttrValue
     public void saveSpuSaleAttrValueByList(List<SpuSaleAttrValue> spuSaleAttrValueList, String spuId);
 
+
     // BaseSaleAttr
     public List<BaseSaleAttr> baseSaleAttrList() ;
 
+
     // SpuImage
     public void saveSpuImageByList(List<SpuImage> spuImageList, String spuId);
+
+    public void deleteSpuImage(String imageUrl);
+
+
+
 }

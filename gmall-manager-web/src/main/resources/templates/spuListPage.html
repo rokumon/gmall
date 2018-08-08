@@ -11,12 +11,12 @@
     <table id="spulist_dg" class="easyui-datagrid" title="spu列表"
            data-options="singleSelect:true,method:'get' ,toolbar:'#spulist_tb'">
         <thead>
-            <tr>
-                <!-- 通过 field:"'属性名'" 绑定属性值 -->
-                <th data-options="field:'id'" width="10%">商品id</th>
-                <th data-options="field:'spuName'" width="30%">商品名称</th>
-                <th data-options="field:'description'" width="60%">商品描述</th>
-            </tr>
+        <tr>
+            <!-- 通过 field:"'属性名'" 绑定属性值 -->
+            <th data-options="field:'id'" width="10%">商品id</th>
+            <th data-options="field:'spuName'" width="30%">商品名称</th>
+            <th data-options="field:'description'" width="60%">商品描述</th>
+        </tr>
         </thead>
     </table>
 
@@ -27,7 +27,8 @@
             <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editSpuInfo()">编辑</a>
             <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="deleteSpuInfo()">删除</a>
             <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addSkuInfo()">增加sku</a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="showSkuInfoList()">sku列表</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true"
+               onclick="showSkuInfoList()">sku列表</a>
         </div>
 
         <div>
@@ -47,6 +48,118 @@
 <div th:include="skuListPage"></div>
 
 <script language="application/javascript">
+
+    // 主功能
+
+    // 添加
+    function addSpuInfo() {
+
+        // 获取 三级分类 id
+        var catalog3Id = $("#ctg3ForSpuList").combobox("getValue");
+
+        // 打开属性添加的对话框
+        if (catalog3Id) {
+
+            //打开一个spu添加的对话框
+            $("#spu_dlg").dialog("open");
+
+            // 初始化对话框
+            initSpuInfoDlg(null,null,catalog3Id);
+        } else {
+            alert("请选择三级分类的id");
+        }
+    }
+
+    // 编辑
+    function editSpuInfo() {
+
+        var spuInfo = $("#spulist_dg").datagrid("getSelected");
+
+        // 打开属性添加的对话框
+        if (spuInfo) {
+            $("#spu_dlg").dialog("open");
+            // 初始化
+            var url = "updateSpuInfo";
+            initSpuInfoDlg(url,spuInfo);
+        } else {
+            alert("请选择要修改的Spu");
+        }
+    }
+
+    // 删除
+    function deleteSpuInfo() {
+
+        var spuInfo = $("#spulist_dg").datagrid("getSelected");
+
+        // 打开属性添加的对话框
+        if (spuInfo) {
+            $.get("deleteSpuInfo/" + spuInfo.id, null, function (result) {
+                    if (result) {
+                        reloadSpuList();
+                    }
+                }
+            );
+        } else {
+            alert("请选择要删除的属性!");
+        }
+    }
+
+    // 添加 sku
+    function addSkuInfo() {
+
+        var spuInfo = $("#spulist_dg").datagrid("getSelected");
+
+        var catalog3Id = $("#ctg3ForSpuList").combobox("getValue");
+
+        if(!!spuInfo && !!catalog3Id){
+
+            //打开一个spu添加的对话框
+            $("#sku_dlg").dialog("open");
+
+            var url = "addSku";
+
+            // 初始化对话框
+            initSkuInfoDlg(url,spuInfo,catalog3Id);
+        } else {
+            alert("请选择三级分类 和 Spu");
+        }
+    }
+
+    // sku 列表
+    function showSkuInfoList() {
+
+        var spuInfo = $("#spulist_dg").datagrid("getSelected");
+
+        var catalog3Id = $("#ctg3ForSpuList").combobox("getValue");
+
+        if(!!spuInfo && !!catalog3Id){
+
+            //打开一个spu添加的对话框
+            $("#skulist_dlg").dialog("open");
+
+            var url = "editSku";
+
+            // 初始化对话框
+            initSkuListDatagrid(url,spuInfo,catalog3Id);
+        } else {
+            alert("请选择三级分类 和 Spu");
+        }
+    }
+
+    // reload
+    function reloadSpuList(catalog3Id) {
+
+        // 判断
+        if (catalog3Id == null || catalog3Id == "") {
+            catalog3Id = $("#ctg3ForSpuList").combobox("getValue");
+        }
+
+        // 加载数据 并初始化
+        $("#spulist_dg").datagrid({
+            url: 'spuList/' + catalog3Id
+        });
+    }
+
 
     // 绑定菜单函数
     $(function () {
@@ -81,78 +194,6 @@
             }
         });
     });
-
-
-    //Spu
-    function reloadSpuList(catalog3Id) {
-
-        // 判断
-        if (catalog3Id == null || catalog3Id == "") {
-            catalog3Id = $("#ctg3ForSpuList").combobox("getValue");
-        }
-
-        // 加载数据 并初始化
-        $("#spulist_dg").datagrid({
-            url: 'spuList/' + catalog3Id
-        });
-    }
-
-    function addSpuInfo() {
-
-        //打开一个spu添加的对话框
-        $("#spu_dlg").dialog("open");
-
-        // 初始化对话框
-        initSpuInfoDlg();
-    }
-
-    function editSpuInfo() {
-        var catalog3Id = $("#ctg3ForSpuList").combobox("getValue");
-        // 打开属性添加的对话框
-        if (catalog3Id) {
-            $("#spu_dlg").dialog("open");
-            // 初始化
-            var url = "updateSpuInfo";
-            initSpuInfoDlg(url);
-        } else {
-            alert("请选择三级分类的id");
-        }
-    }
-
-    function deleteSpuInfo() {
-        var spuInfo = $("#dg").datagrid("getSelected");
-        // 打开属性添加的对话框
-        if (spuInfo) {
-
-            $.get("deleteSpuInfo/" + spuInfo.id, null, function (result) {
-                    if (result) {
-                        reloadSpuList();
-                    }
-                }
-            );
-        } else {
-            alert("请选择要删除的属性!");
-        }
-    }
-
-    //Sku
-    function addSkuInfo() {
-        //打开一个spu添加的对话框
-        $("#sku_dlg").dialog("open");
-
-        // 初始化对话框
-        initSkuInfoDlg();
-    }
-
-    // 显示 skuInfo 列表
-    function showSkuInfoList() {
-        // 打开sku对话框
-        $("#skulist_dlg").dialog("open");
-        // spuInfo
-        var spuInfo = $("#spulist_dg").datagrid("getSelected");
-        // 初始化sku数据列表
-        initSkuListDatagrid(spuInfo);
-    }
 
 </script>
 </body>

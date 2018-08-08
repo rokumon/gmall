@@ -5,8 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-<div id="skulist_dlg" class="easyui-dialog" title="sku列表" style="width:700px;height:520px;"
-     closed="true" data-options="resizable:true,modal:false">
+<div id="skulist_dlg" class="easyui-dialog" title="sku列表" style="width:700px;height:520px;" closed="true" data-options="resizable:true,modal:false">
     <!-----------------列表 ----------------------------->
     <table id="skulist_dg" class="easyui-datagrid"
            data-options="singleSelect:true,method:'get',toolbar:'#skulist_tb'">
@@ -42,7 +41,7 @@
 
 <script language="application/javascript">
 
-    function initSkuListDatagrid(spuInfo) {
+    function initSkuListDatagrid(url,spuInfo,catalog3Id) {
         // 加载sku数据列表
         $("#skulist_dg").datagrid({url: "skuList/" + spuInfo.id});
     }

@@ -5,8 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-<div id="sku_dlg" class="easyui-dialog" title="编辑sku" style="width:700px;height:520px;"
-     closed="true" data-options="iconCls:'icon-save',resizable:true,modal:false" buttons="#skuBtns">
+<div id="sku_dlg" class="easyui-dialog" title="编辑sku" style="width:700px;height:520px;" closed="true" data-options="iconCls:'icon-save',resizable:true,modal:false" buttons="#skuBtns">
     <form id="skuForm">
         <br/>
         <label>sku名称:</label>
@@ -16,12 +15,10 @@
         <input id="price" name="price" class="easyui-numberbox" data-options="min:0,precision:2" style="width:300px;"/>
         <br/><br/>
         <label>商品重量（千克):</label>
-        <input id="weight" name="weight" class="easyui-numberbox" data-options="min:0,precision:2"
-               style="width:300px;"/>
+        <input id="weight" name="weight" class="easyui-numberbox" data-options="min:0,precision:2" style="width:300px;"/>
         <br/><br/>
         <label>商品规格描述:</label>
-        <input id="skuDesc" name="skuDesc" class="easyui-textbox" data-options="multiline:true"
-               style="width:500px;height:100px"/>
+        <input id="skuDesc" name="skuDesc" class="easyui-textbox" data-options="multiline:true" style="width:500px;height:100px"/>
         <input id="spuIdForSku" name="spuId" type="hidden"/>
 
         <input id="skuId" name="id" type="hidden"/>
@@ -59,6 +56,10 @@
 </div>
 
 <script language="application/javascript">
+
+    function closeSku() {
+        $("#skuForm").dialog("close");
+    }
 
     function initSkuInfoDlg(spuInfo) {
         // 获取 三级分类 id
