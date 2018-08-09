@@ -1,8 +1,10 @@
 package cn.mislily.gmall.manager.controller;
 
 import cn.mislily.gmall.bean.BaseSaleAttr;
+import cn.mislily.gmall.bean.SpuImage;
 import cn.mislily.gmall.bean.SpuInfo;
 import cn.mislily.gmall.FastFDSFileUtils;
+import cn.mislily.gmall.bean.SpuSaleAttr;
 import cn.mislily.gmall.service.SpuService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
@@ -20,6 +22,36 @@ public class SpuController {
 
     @Reference
     private SpuService spuService;
+
+
+
+
+    //
+
+    @RequestMapping("getSpuImageListBySpuId")
+    @ResponseBody
+    public List<SpuImage> getSpuImageListBySpuId(String spuId){
+
+        List<SpuImage> spuImages = spuService.getSpuImageListBySpuId(spuId);
+
+        return spuImages;
+    }
+
+
+    @RequestMapping("getSaleAttrListBySpuId")
+    @ResponseBody
+    public List<SpuSaleAttr> getSaleAttrListBySpuId(String spuId){
+
+        System.out.println(spuId);
+
+        List<SpuSaleAttr> spuSaleAttrs = spuService.getSaleAttrListBySpuId(spuId);
+
+        System.out.println(spuSaleAttrs);
+
+        return spuSaleAttrs;
+    }
+
+
 
 
 

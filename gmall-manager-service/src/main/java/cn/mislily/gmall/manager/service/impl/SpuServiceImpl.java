@@ -250,4 +250,25 @@ public class SpuServiceImpl implements SpuService {
         }
     }
 
+    @Override
+    public List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(Map<String, String> stringStringHashMap) {
+
+        return spuSaleAttrValueMapper.selectSpuSaleAttrListCheckBySku(stringStringHashMap);
+    }
+
+    @Override
+    public List<SkuInfo> getSkuSaleAttrValueListBySpu(String spuId) {
+
+        return spuSaleAttrValueMapper.selectSkuSaleAttrValueListBySpu(spuId);
+    }
+
+    @Override
+    public List<SpuImage> getSpuImageListBySpuId(String spuId) {
+        return spuImageList(spuId);
+    }
+
+    @Override
+    public List<SpuSaleAttr> getSaleAttrListBySpuId(String spuId) {
+        return spuSaleAttrList(spuId);
+    }
 }

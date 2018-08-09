@@ -59,7 +59,26 @@
     function editSpuSaleAttr() {
         var selectedRow = $("#spuSaleAttrDg").datagrid("getSelected");
         if (selectedRow) {
+            console.log(selectedRow);
 
+            // 打开spu的销售属性对话框
+            $("#spuSaleAttr_dlg").dialog("open");
+
+            // 数据初始化
+            $("#spuSaleAttrValueDg").datagrid('loadData', {total: 0, rows: []});
+
+            // 销售属性列表数据不为空时加载数据
+            if (selectedRow.spuSaleAttrValueJson){
+                //$("#spuSaleAttrValueDg").datagrid('loadData', selectedRow.spuSaleAttrValueJson);
+                // 初始化spu销售属性对话框
+
+
+
+                initSpuSaleAttrDlg(selectedRow.spuSaleAttrValueJson);
+            } else {
+                // 初始化spu销售属性对话框
+                initSpuSaleAttrDlg();
+            }
         } else {
             alert("请选择要编辑的行");
         }

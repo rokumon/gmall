@@ -9,8 +9,11 @@ import cn.mislily.gmall.manager.mapper.SkuImageMapper;
 import cn.mislily.gmall.manager.mapper.SkuInfoMapper;
 import cn.mislily.gmall.manager.mapper.SkuSaleAttrValueMapper;
 import cn.mislily.gmall.service.SkuService;
+import cn.mislily.gmall.util.RedisUtil;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
+import redis.clients.jedis.Jedis;
 
 import java.util.List;
 
@@ -29,6 +32,9 @@ public class SkuServiceImpl implements SkuService {
     @Autowired
     private SkuImageMapper skuImageMapper;
 
+
+    @Autowired
+    RedisUtil redisUtil;
 
     // sku
 
@@ -65,7 +71,6 @@ public class SkuServiceImpl implements SkuService {
             skuSaleAttrValueMapper.insert(skuSaleAttrValue);
         }
 
-
         List<SkuImage> skuImageList = skuInfo.getSkuImageList();
         for (SkuImage skuImage : skuImageList) {
             skuImage.setSkuId(skuId);
@@ -75,12 +80,51 @@ public class SkuServiceImpl implements SkuService {
 
     @Override
     public SkuInfo skuInfo(String skuId) {
-        return null;
+
+        Jedis jedis = redisUtil.getJedis();
+        SkuInfo skuInfo = new SkuInfo();
+        skuInfo.setId(skuId);
+
+        // 查询redis缓存
+        String key = "sku:" + skuId + ":info";
+        String val = jedis.get(key);
+        skuInfo = JSON.parseObject(val, SkuInfo.class);
+
+        if (skuInfo == null) {
+            // 查询db
+            skuInfo = getSkuByIdFormDb(skuId);
+
+            // 同步缓存
+            jedis.set(key, JSON.toJSONString(skuInfo));
+        }
+
+
+        return skuInfo;
     }
 
     @Override
     public void deleteSkuInfo(SkuInfo skuId) {
 
+    }
+
+    private SkuInfo getSkuByIdFormDb(String skuId) {
+
+        SkuInfo skuInfo = new SkuInfo();
+        skuInfo.setId(skuId);
+        SkuInfo skuInfo1 = skuInfoMapper.selectOne(skuInfo);
+
+        SkuImage skuImage = new SkuImage();
+        skuImage.setSkuId(skuId);
+        List<SkuImage> select = skuImageMapper.select(skuImage);
+
+        skuInfo1.setSkuImageList(select);
+
+        SkuSaleAttrValue skuSaleAttrValue = new SkuSaleAttrValue();
+        skuSaleAttrValue.setSkuId(skuId);
+        List<SkuSaleAttrValue> select1 = skuSaleAttrValueMapper.select(skuSaleAttrValue);
+        skuInfo1.setSkuSaleAttrValueList(select1);
+
+        return skuInfo1;
     }
 
     // skuImage

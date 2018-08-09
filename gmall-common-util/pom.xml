@@ -24,9 +24,9 @@
         </dependency>
 
         <dependency>
-            <groupId>cn.mislily.gmall</groupId>
-            <artifactId>gmall-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.49</version>
         </dependency>
 
         <dependency>
@@ -81,6 +81,7 @@
             <groupId>com.gitee.reger</groupId>
             <artifactId>spring-boot-starter-dubbo</artifactId>
         </dependency>
+
         <dependency>
             <groupId>cn.mislily.gmall</groupId>
             <artifactId>gmall-api</artifactId>

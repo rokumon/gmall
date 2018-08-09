@@ -3,6 +3,7 @@ package cn.mislily.gmall.service;
 import cn.mislily.gmall.bean.*;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SpuService {
 
@@ -36,5 +37,11 @@ public interface SpuService {
     public void deleteSpuImage(String imageUrl);
 
 
+    List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(Map<String, String> stringStringHashMap);
 
+    List<SkuInfo> getSkuSaleAttrValueListBySpu(String spuId);
+
+    List<SpuImage> getSpuImageListBySpuId(String spuId);
+
+    List<SpuSaleAttr> getSaleAttrListBySpuId(String spuId);
 }
