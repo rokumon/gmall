@@ -13,4 +13,6 @@ public interface SkuService {
     public SkuInfo skuInfo(String skuId);
 
     public void deleteSkuInfo(SkuInfo skuId);
+
+    List<SkuInfo> getSkuListByCatalog3Id(String s);
 }
