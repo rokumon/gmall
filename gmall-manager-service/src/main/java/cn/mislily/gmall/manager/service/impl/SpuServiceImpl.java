@@ -42,8 +42,8 @@ public class SpuServiceImpl implements SpuService {
     public List<SpuInfo> spuList(String catalog3Id) {
         SpuInfo spuInfo = new SpuInfo();
         spuInfo.setCatalog3Id(catalog3Id);
-        List<SpuInfo> select = spuInfoMapper.select(spuInfo);
-        return select;
+        List<SpuInfo> spuInfoList = spuInfoMapper.select(spuInfo);
+        return spuInfoList;
     }
 
     /**
@@ -84,16 +84,24 @@ public class SpuServiceImpl implements SpuService {
 
     }
 
+    /**
+     * 根据 spuId 获取 spuInfo 的所有属性信息
+     * @param spuId
+     * @return
+     */
     @Override
     public SpuInfo spuInfo(String spuId) {
 
         SpuInfo spuInfo = new SpuInfo();
         spuInfo.setId(spuId);
 
+        // 获取 spuInfo 基础信息
         spuInfo = spuInfoMapper.selectOne(spuInfo);
 
+        // 获取 spuInfo 的 图片列表
         List<SpuImage> spuImageList = spuImageList(spuId);
 
+        // 获取 spuInfo 的 销售属性 列表
         List<SpuSaleAttr> spuSaleAttrList = spuSaleAttrList(spuId);
 
         /*
@@ -109,21 +117,7 @@ public class SpuServiceImpl implements SpuService {
 
                 if (spuSaleAttrValueList != null){
 
-                    Map<String, Object> spuSaleAttrValueJson = new HashMap<String, Object>();
-
-                    List<Map<String,Object>> rows = new ArrayList<Map<String,Object>>();
-
-                    for (SpuSaleAttrValue spuSaleAttrValue:spuSaleAttrValueList) {
-                        Map<String,Object> row = new HashMap<>();
-
-                        row.put("id",spuSaleAttrValue.getId());
-                        row.put("saleAttrValueName",spuSaleAttrValue.getSaleAttrValueName());
-
-                        rows.add(row);
-                    }
-
-                    spuSaleAttrValueJson.put("total",spuSaleAttrValueList.size());
-                    spuSaleAttrValueJson.put("rows",rows);
+                    Map<String, Object> spuSaleAttrValueJson = MapRizeList(spuSaleAttrValueList);
 
                     spuSaleAttr.setSpuSaleAttrValueJson(spuSaleAttrValueJson);
                 }
@@ -134,6 +128,27 @@ public class SpuServiceImpl implements SpuService {
         spuInfo.setSpuSaleAttrList(spuSaleAttrList);
 
         return spuInfo;
+    }
+
+    private Map<String, Object> MapRizeList(List<SpuSaleAttrValue> spuSaleAttrValueList){
+
+        Map<String, Object> spuSaleAttrValueJson = new HashMap<String, Object>();
+
+        List<Map<String,Object>> rows = new ArrayList<Map<String,Object>>();
+
+        for (SpuSaleAttrValue spuSaleAttrValue:spuSaleAttrValueList) {
+            Map<String,Object> row = new HashMap<>();
+
+            row.put("id",spuSaleAttrValue.getId());
+            row.put("saleAttrValueName",spuSaleAttrValue.getSaleAttrValueName());
+
+            rows.add(row);
+        }
+
+        spuSaleAttrValueJson.put("total",spuSaleAttrValueList.size());
+        spuSaleAttrValueJson.put("rows",rows);
+
+        return spuSaleAttrValueJson;
     }
 
 
@@ -147,26 +162,34 @@ public class SpuServiceImpl implements SpuService {
     public void saveSaleAttrsByList(List<SpuSaleAttr> spuSaleAttrList, String spuId){
         if(spuSaleAttrList != null){
             for (SpuSaleAttr spuSaleAttr:spuSaleAttrList){
+
                 spuSaleAttr.setSpuId(spuId);
                 spuSaleAttrMapper.insert(spuSaleAttr);
 
                 List<SpuSaleAttrValue> spuSaleAttrValueList = spuSaleAttr.getSpuSaleAttrValueList();
-
                 saveSpuSaleAttrValueByList(spuSaleAttrValueList, spuId);
             }
         }
     }
 
+    /**
+     * 获取 销售属性 列表
+     * @param spuId
+     * @return
+     */
     public List<SpuSaleAttr> spuSaleAttrList(String spuId){
 
         SpuSaleAttr spuSaleAttr = new SpuSaleAttr();
         spuSaleAttr.setSpuId(spuId);
 
+        // 获取 销售属性 列表
         List<SpuSaleAttr> spuSaleAttrList = spuSaleAttrMapper.select(spuSaleAttr);
 
+        // 填充 销售属性值
         if (spuSaleAttrList != null) {
 
             for (SpuSaleAttr spuSaleAttrObj:spuSaleAttrList){
+                // 获取的是 saleAttrId
                 List<SpuSaleAttrValue> spuSaleAttrValueList = spuSaleAttrValues(spuSaleAttrObj.getSaleAttrId(),spuId);
                 spuSaleAttrObj.setSpuSaleAttrValueList(spuSaleAttrValueList);
             }
@@ -184,12 +207,22 @@ public class SpuServiceImpl implements SpuService {
      * @param spuId
      */
     public void saveSpuSaleAttrValueByList(List<SpuSaleAttrValue> spuSaleAttrValueList, String spuId){
-        for (SpuSaleAttrValue spuSaleAttrValue : spuSaleAttrValueList) {
-            spuSaleAttrValue.setSpuId(spuId);
-            spuSaleAttrValueMapper.insert(spuSaleAttrValue);
+
+        // 保存 销售属性值
+        if (spuSaleAttrValueList != null) {
+            for (SpuSaleAttrValue spuSaleAttrValue : spuSaleAttrValueList) {
+                spuSaleAttrValue.setSpuId(spuId);
+                spuSaleAttrValueMapper.insert(spuSaleAttrValue);
+            }
         }
     }
 
+    /**
+     * 获取 销售属性值 列表
+     * @param saleAttrId
+     * @param spuId
+     * @return
+     */
     public List<SpuSaleAttrValue> spuSaleAttrValues(String saleAttrId,String spuId) {
 
         SpuSaleAttrValue spuSaleAttrValue = new SpuSaleAttrValue();
@@ -217,7 +250,11 @@ public class SpuServiceImpl implements SpuService {
 
     // SpuImage
 
-
+    /**
+     * 根据 spuId 获取 spuImage
+     * @param spuId
+     * @return
+     */
     public List<SpuImage> spuImageList(String spuId){
         SpuImage spuImage = new SpuImage();
         spuImage.setSpuId(spuId);
@@ -239,6 +276,10 @@ public class SpuServiceImpl implements SpuService {
         }
     }
 
+    /**
+     * 删除 图片信息
+     * @param imageUrl
+     */
     public void deleteSpuImage(String imageUrl){
         if(imageUrl != null) {
             SpuImage spuImage = new SpuImage();
@@ -250,16 +291,34 @@ public class SpuServiceImpl implements SpuService {
         }
     }
 
+    /**
+     * 根据 sku 决定哪些 spu 对应的 销售属性值 被勾选
+     * @param stringStringHashMap
+     * @return
+     */
     @Override
     public List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(Map<String, String> stringStringHashMap) {
 
-        return spuSaleAttrValueMapper.selectSpuSaleAttrListCheckBySku(stringStringHashMap);
+        List<SpuSaleAttr> spuSaleAttrList = spuSaleAttrValueMapper.selectSpuSaleAttrListCheckBySku(stringStringHashMap);
+
+        System.out.println("DEBUG");
+
+        return spuSaleAttrList;
     }
 
+    /**
+     * 通过 spuId 获取对应的 skuSaleAttrValue
+     * @param spuId
+     * @return
+     */
     @Override
     public List<SkuInfo> getSkuSaleAttrValueListBySpu(String spuId) {
 
-        return spuSaleAttrValueMapper.selectSkuSaleAttrValueListBySpu(spuId);
+        List<SkuInfo> skuInfoList = spuSaleAttrValueMapper.selectSkuSaleAttrValueListBySpu(spuId);
+
+        System.out.println("DEBUG");
+
+        return skuInfoList;
     }
 
     @Override

@@ -22,6 +22,8 @@ public interface SpuService {
     // SpuSaleAttr
     public void saveSaleAttrsByList(List<SpuSaleAttr> spuSaleAttrList, String spuId);
 
+    List<SpuSaleAttr> spuSaleAttrList(String spuId);
+
 
     // SpuSaleAttrValue
     public void saveSpuSaleAttrValueByList(List<SpuSaleAttrValue> spuSaleAttrValueList, String spuId);
@@ -44,4 +46,7 @@ public interface SpuService {
     List<SpuImage> getSpuImageListBySpuId(String spuId);
 
     List<SpuSaleAttr> getSaleAttrListBySpuId(String spuId);
+
+
+
 }
