@@ -28,7 +28,11 @@
         WHERE ssav.sku_id = info.id
         AND info.spu_id = #{spuId}
     </select>
-    
+
+
+
+
+
     <resultMap id="selectSkuSaleAttrValueListBySpuMap" type="cn.mislily.gmall.bean.SkuInfo" autoMapping="true">
         <result property="id" column="id"></result>
         <collection property="skuSaleAttrValueList" ofType="cn.mislily.gmall.bean.SkuSaleAttrValue" autoMapping="true">

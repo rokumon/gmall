@@ -7,10 +7,12 @@ import cn.mislily.gmall.manager.mapper.AttributeInfoMapper;
 import cn.mislily.gmall.manager.mapper.AttributeValueMapper;
 import cn.mislily.gmall.service.AttributeService;
 import com.alibaba.dubbo.config.annotation.Service;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class AttributeServiceImpl implements AttributeService {
@@ -23,6 +25,20 @@ public class AttributeServiceImpl implements AttributeService {
 
 
     //AttributeInfo
+    @Override
+    public BaseAttrInfo attributeInfo(String id) {
+
+        BaseAttrInfo baseAttrInfo = attributeInfoMapper.selectByPrimaryKey(id);
+
+        // 查询 属性名 对应的 属性值 列表
+        List<BaseAttrValue> attrValueList = attributeValueList(baseAttrInfo.getId());
+
+        // 将属性值列表添加
+        baseAttrInfo.setAttrValueList(attrValueList);
+
+        return baseAttrInfo;
+    }
+
 
     /**
      * 根据 三级列表 id 获取 属性列表
@@ -67,6 +83,7 @@ public class AttributeServiceImpl implements AttributeService {
 
     /**
      * 保存 属性名 的所有信息
+     *
      * @param attributeInfo
      */
     @Override
@@ -122,6 +139,7 @@ public class AttributeServiceImpl implements AttributeService {
     /**
      * 根据 属性信息 更新属性列表
      * 包括 增 删 改 操作
+     *
      * @param attributeInfo
      */
     @Override
@@ -155,11 +173,26 @@ public class AttributeServiceImpl implements AttributeService {
     }
 
 
-
     // Tools
 
     /**
+     * 根据 列表 更新 属性值
+     *
+     * @param
+     */
+    @Override
+    public List<BaseAttrValue> getAttributeValuesList(String attrId) {
+        BaseAttrValue baseAttrValue = new BaseAttrValue();
+        baseAttrValue.setAttrId(attrId);
+
+        List<BaseAttrValue> baseAttrValueList = attributeValueMapper.select(baseAttrValue);
+
+        return baseAttrValueList;
+    }
+
+    /**
      * 根据 列表 保存 属性值
+     *
      * @param attributeValueList
      * @param attrId
      * @param isEnabled
@@ -178,6 +211,7 @@ public class AttributeServiceImpl implements AttributeService {
 
     /**
      * 根据 列表 更新 属性值
+     *
      * @param attributeValueList
      */
     @Override
@@ -192,6 +226,7 @@ public class AttributeServiceImpl implements AttributeService {
 
     /**
      * 根据 列表 删除 属性值
+     *
      * @param attributeValueList
      */
     @Override
@@ -204,8 +239,15 @@ public class AttributeServiceImpl implements AttributeService {
         }
     }
 
+    @Override
+    public List<BaseAttrInfo> getAttrListByValueIds(Set<String> valueIds) {
 
+        String join = StringUtils.join(valueIds, ",");
 
+        List<BaseAttrInfo> baseAttrInfos = attributeValueMapper.selectAttrListByValueIds(join);
+
+        return baseAttrInfos;
+    }
 
 
 }
