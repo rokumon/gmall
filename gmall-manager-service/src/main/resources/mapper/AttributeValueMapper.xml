@@ -5,8 +5,13 @@
 <mapper namespace="cn.mislily.gmall.manager.mapper.AttributeValueMapper">
 
     <select id="selectAttrListByValueIds"  resultMap="selectAttrListByValueIdsMap">
-            select info.*,bv.*,info.id as attrId , bv.id as valueId from base_attr_info info ,base_attr_value bv where info.id = bv.attr_id
-            and bv.id in (${_parameter})
+            select info.*,bv.*,info.id as attrId , bv.id as valueId
+            from base_attr_info info ,base_attr_value bv
+            where info.id = bv.attr_id
+            and bv.id in
+        <foreach collection="valueIds" item="valueId" index="no" open="(" separator="," close=")">
+            #{valueId}
+        </foreach>
     </select>
 
 

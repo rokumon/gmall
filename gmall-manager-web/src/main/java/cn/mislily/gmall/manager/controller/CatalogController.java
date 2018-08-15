@@ -18,6 +18,10 @@ public class CatalogController {
     @Reference
     private CatalogService catalogService;
 
+    /**
+     * 一级菜单
+     * @return
+     */
     @RequestMapping("catalog1List")
     @ResponseBody
     public List<BaseCatalog1> catalog1List(){
@@ -25,6 +29,11 @@ public class CatalogController {
         return baseCatalog1List;
     }
 
+    /**
+     * 二级菜单
+     * @param catalog1Id
+     * @return
+     */
     @RequestMapping("catalog2List/{catalog1Id}")
     @ResponseBody
     public List<BaseCatalog2> catalog2List(@PathVariable("catalog1Id") String catalog1Id){
@@ -32,6 +41,11 @@ public class CatalogController {
         return baseCatalog2List;
     }
 
+    /**
+     * 三级菜单
+     * @param catalog2Id
+     * @return
+     */
     @RequestMapping("catalog3List/{catalog2Id}")
     @ResponseBody
     public List<BaseCatalog3> catalog3List(@PathVariable("catalog2Id") String catalog2Id){

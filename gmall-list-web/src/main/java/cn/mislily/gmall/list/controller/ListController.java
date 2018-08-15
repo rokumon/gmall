@@ -1,7 +1,7 @@
 package cn.mislily.gmall.list.controller;
 
 import cn.mislily.gmall.bean.*;
-import cn.mislily.gmall.service.AttributeService;
+import cn.mislily.gmall.service.BaseAttrService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ public class ListController {
     @Reference
     cn.mislily.gmall.service.ListService ListService;
     @Reference
-    AttributeService attrService;
+    BaseAttrService baseAttrService;
 
     @RequestMapping("list.html")
     public String search(SkuLsParam skuLsParam, ModelMap map) {
@@ -32,7 +32,7 @@ public class ListController {
 
             for (int i = 0; i < baseAttrInfos.size(); i++) {
                 BaseAttrInfo baseAttrInfo = baseAttrInfos.get(i);
-                baseAttrInfo = attrService.attributeInfo(baseAttrInfo.getId());
+                baseAttrInfo = baseAttrService.getAttrInfoById(baseAttrInfo.getId());
                 baseAttrInfos.remove(i);
                 baseAttrInfos.add(i,baseAttrInfo);
             }
@@ -186,7 +186,7 @@ public class ListController {
 
         // 根据去重后的id集合检索，关联到的平台属性列表
         List<BaseAttrInfo> baseAttrInfos = new ArrayList<>();
-        baseAttrInfos = attrService.getAttrListByValueIds(valueIds);
+        baseAttrInfos = baseAttrService.getBaseAttrValuesByValueIds(valueIds);
 
         return baseAttrInfos;
     }
