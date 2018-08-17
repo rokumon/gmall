@@ -22,10 +22,6 @@ public class SpuController {
 
     @Reference
     private SpuService spuService;
-
-
-
-
     //
 
     @RequestMapping("getSpuImageListBySpuId")
@@ -61,7 +57,7 @@ public class SpuController {
     @ResponseBody
     public SpuInfo spuInfo(@PathVariable("spuId") String spuId){
 
-        SpuInfo spuInfo = spuService.spuInfo(spuId);
+        SpuInfo spuInfo = spuService.getSpuInfoById(spuId);
         System.out.println(spuInfo.getSpuImageList());
         System.out.println(spuInfo.getSpuSaleAttrList());
         return spuInfo;
@@ -101,7 +97,7 @@ public class SpuController {
     @RequestMapping("spuList/{catalog3Id}")
     @ResponseBody
     public List<SpuInfo> spuList(@PathVariable("catalog3Id")String catalog3Id){
-        List<SpuInfo> spuInfos = spuService.spuList(catalog3Id);
+        List<SpuInfo> spuInfos = spuService.getSpuInfoListByCatalog3Id(catalog3Id);
         return spuInfos;
     }
 

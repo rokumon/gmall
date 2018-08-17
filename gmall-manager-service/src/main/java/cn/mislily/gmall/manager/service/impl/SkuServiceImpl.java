@@ -121,6 +121,8 @@ public class SkuServiceImpl implements SkuService {
     }
 
     /**
+     *
+     *
      * @param skuId
      * @return
      */
@@ -145,6 +147,7 @@ public class SkuServiceImpl implements SkuService {
         }
 
         if (StringUtils.isBlank(val)) {
+            // 缓存未命中
             System.out.println(Thread.currentThread().getName() + "发现缓存中没有数据，申请分布式锁");
             // 申请缓存锁
             String OK = jedis.set("sku:" + skuInfoId + ":lock", "1", "nx", "px", 5000);
@@ -192,38 +195,12 @@ public class SkuServiceImpl implements SkuService {
             System.out.println(Thread.currentThread().getName() + "正常从缓存中取得数据，返回结果");
             skuInfo = JSON.parseObject(val, SkuInfo.class);
         }
-
         return skuInfo;
-        /*
-        Jedis jedis = redisUtil.getJedis();
-        SkuInfo skuInfo = new SkuInfo();
-        skuInfo.setId(skuId);
-
-        // key 的 形式
-        // sku:70:info
-        String key = "sku:" + skuId + ":info";
-
-        // 查询 redis 缓存
-        String val = jedis.get(key);
-
-        // 转换成为 json 对象
-        skuInfo = JSON.parseObject(val, SkuInfo.class);
-
-        // 如果 Json 对象为 null,则说明缓存未命中，要去DB查询
-        if (skuInfo == null) {
-            // 查询db
-            skuInfo = getSkuInfoByIdFormDb(skuId);
-
-            // 同步缓存
-            jedis.set(key, JSON.toJSONString(skuInfo));
-        }
-
-        // 返回查询结果
-        return skuInfo;
-        */
     }
 
     /**
+     *
+     *
      * @param skuInfoId
      */
     @Override

@@ -23,14 +23,14 @@ public class SkuController {
     @ResponseBody
     public String saveSku(SkuInfo skuInfo){
 
-        skuService.saveSku(skuInfo);
+        skuService.saveSkuInfo(skuInfo);
 
         return "success";
     }
 
     @RequestMapping("deleteSku/{skuId}")
     @ResponseBody
-    public String deleteSku(SkuInfo skuId){
+    public String deleteSku(@PathVariable("skuId") String skuId){
 
         skuService.deleteSkuInfo(skuId);
 
@@ -38,11 +38,11 @@ public class SkuController {
     }
 
 
-    @RequestMapping("updateSku/{skuId}")
+    @RequestMapping("updateSku")
     @ResponseBody
-    public String updateSku(SkuInfo skuId){
+    public String updateSku(SkuInfo skuInfo){
 
-        skuService.deleteSkuInfo(skuId);
+        skuService.updateSkuInfo(skuInfo);
 
         return "success";
     }
@@ -52,7 +52,7 @@ public class SkuController {
     @ResponseBody
     public SkuInfo skuInfo(@PathVariable("skuId") String skuId){
 
-        SkuInfo skuInfo = skuService.skuInfo(skuId);
+        SkuInfo skuInfo = skuService.getSkuInfoById(skuId);
 
         return skuInfo;
     }
@@ -61,7 +61,7 @@ public class SkuController {
     @ResponseBody
     public List<SkuInfo> skuList(@PathVariable("spuId") String spuId){
 
-        List<SkuInfo> skuInfos =  skuService.skuList(spuId);
+        List<SkuInfo> skuInfos =  skuService.getSkuInfoListBySpuId(spuId);
 
         return skuInfos;
     }
