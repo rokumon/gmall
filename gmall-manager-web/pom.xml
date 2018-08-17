@@ -26,6 +26,8 @@
 
     <dependencies>
 
+
+
         <dependency>
             <groupId>cn.mislily.gmall</groupId>
             <artifactId>gmall-web-util</artifactId>

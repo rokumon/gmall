@@ -20,4 +20,10 @@ public class IndexController {
     public String spuListPage(){
         return "spuListPage";
     }
+
+    @RequestMapping("skuListPage")
+    public String skuListPage(){
+        return "skuListPage";
+    }
+
 }

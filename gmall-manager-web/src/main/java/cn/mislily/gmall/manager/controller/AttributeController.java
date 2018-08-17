@@ -1,7 +1,7 @@
 package cn.mislily.gmall.manager.controller;
 
 import cn.mislily.gmall.bean.BaseAttrInfo;
-import cn.mislily.gmall.service.AttributeService;
+import cn.mislily.gmall.service.BaseAttrService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,44 +14,58 @@ import java.util.List;
 public class AttributeController {
 
     @Reference
-    private AttributeService attributeService;
+    private BaseAttrService baseAttrService;
 
 
-    //Page
+    //==== Page ====
 
 
-    //Info
+    //==== Info ====
+
+    /**
+     *
+     * @param catalog3Id
+     * @return
+     */
     @RequestMapping("attrInfoList/{catalog3Id}")
     @ResponseBody
     public List<BaseAttrInfo> attrInfoList(@PathVariable("catalog3Id")String catalog3Id){
 
-        List<BaseAttrInfo> attrInfoList = attributeService.attributeInfoList(catalog3Id);
+        List<BaseAttrInfo> attrInfoList = baseAttrService.getBaseAttrInfoListByCatalog3Id(catalog3Id);
 
         return attrInfoList;
     }
 
+    /**
+     *
+     * @param baseAttrInfoId
+     * @return
+     */
     @RequestMapping("deleteAttrInfo/{attrInfoId}")
     @ResponseBody
-    public Boolean deleteAttrInfo(@PathVariable("attrInfoId")String attrInfoId){
-
-        attributeService.deleteAttributeInfo(attrInfoId);
-
+    public Boolean deleteAttrInfo(@PathVariable("attrInfoId")String baseAttrInfoId){
+        baseAttrService.deleteAttributeInfoById(baseAttrInfoId);
         return true;
     }
 
-    //Value
+    //==== Value ====
+
+    /**
+     *
+     * @param baseAttrInfo
+     * @return
+     */
     @RequestMapping("saveAttrInfo")
     @ResponseBody
     public Boolean saveAttrInfo(BaseAttrInfo baseAttrInfo){
-        attributeService.saveAttributeInfo(baseAttrInfo);
+        baseAttrService.saveBaseAttrInfo(baseAttrInfo);
         return true;
     }
 
     @RequestMapping("updateAttrInfo")
     @ResponseBody
     public Boolean updateAttrInfo(BaseAttrInfo baseAttrInfo){
-        System.out.println(baseAttrInfo);
-        attributeService.updateAttributeInfo(baseAttrInfo);
+        baseAttrService.updateBaseAttrInfo(baseAttrInfo);
         return true;
     }
 

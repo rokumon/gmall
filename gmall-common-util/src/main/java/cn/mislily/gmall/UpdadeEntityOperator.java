@@ -109,6 +109,14 @@ public class UpdadeEntityOperator<T> {
 
     public UpdadeEntityOperator(List<DataBaseUpdateEntity> dbEntityList, List<DataBaseUpdateEntity> inputEntityList) {
 
+        if(dbEntityList == null){
+            dbEntityList = new ArrayList<DataBaseUpdateEntity>();
+        }
+
+        if(inputEntityList == null){
+            inputEntityList = new ArrayList<DataBaseUpdateEntity>();
+        }
+
         this.dbEntityList = dbEntityList;
         this.inputEntityList = inputEntityList;
 

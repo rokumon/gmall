@@ -91,9 +91,7 @@ public class SpuSaleAttr implements Serializable, DataBaseUpdateEntity {
         if (spuId != null ? !spuId.equals(that.spuId) : that.spuId != null) return false;
         if (saleAttrId != null ? !saleAttrId.equals(that.saleAttrId) : that.saleAttrId != null) return false;
         if (saleAttrName != null ? !saleAttrName.equals(that.saleAttrName) : that.saleAttrName != null) return false;
-        if (spuSaleAttrValueList != null ? !spuSaleAttrValueList.equals(that.spuSaleAttrValueList) : that.spuSaleAttrValueList != null)
-            return false;
-        return spuSaleAttrValueJson != null ? spuSaleAttrValueJson.equals(that.spuSaleAttrValueJson) : that.spuSaleAttrValueJson == null;
+        return spuSaleAttrValueList != null ? spuSaleAttrValueList.equals(that.spuSaleAttrValueList) : that.spuSaleAttrValueList == null;
     }
 
     @Override
@@ -103,7 +101,6 @@ public class SpuSaleAttr implements Serializable, DataBaseUpdateEntity {
         result = 31 * result + (saleAttrId != null ? saleAttrId.hashCode() : 0);
         result = 31 * result + (saleAttrName != null ? saleAttrName.hashCode() : 0);
         result = 31 * result + (spuSaleAttrValueList != null ? spuSaleAttrValueList.hashCode() : 0);
-        result = 31 * result + (spuSaleAttrValueJson != null ? spuSaleAttrValueJson.hashCode() : 0);
         return result;
     }
 }

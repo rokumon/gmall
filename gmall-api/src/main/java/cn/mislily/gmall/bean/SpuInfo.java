@@ -29,6 +29,7 @@ public class SpuInfo implements Serializable, DataBaseUpdateEntity {
 
     @Transient
     private List<SpuSaleAttr> spuSaleAttrList;
+
     @Transient
     private List<SpuImage> spuImageList;
 
